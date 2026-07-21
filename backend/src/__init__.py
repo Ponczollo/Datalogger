@@ -12,7 +12,7 @@ load_dotenv(env_path)
 
 DB_USER = os.getenv("POSTGRES_USER", "postgres")
 DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-DB_NAME = os.getenv("POSTGRES_DB", "dbpzsp2")
+DB_NAME = os.getenv("POSTGRES_DB", "dbdatalogger")
 DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
 DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 
