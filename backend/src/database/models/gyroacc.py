@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer
+from sqlalchemy import BigInteger, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import DB_SCHEMA, Base
@@ -10,7 +10,7 @@ class GyroAcc(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     device_id: Mapped[int] = mapped_column(Integer, ForeignKey(f"{DB_SCHEMA}.device.id"), nullable=False)
-    time: Mapped[int] = mapped_column(Integer, nullable=True)
+    time: Mapped[int] = mapped_column(BigInteger, nullable=True)
     gyro_x: Mapped[int] = mapped_column(Integer, nullable=True)
     gyro_y: Mapped[int] = mapped_column(Integer, nullable=True)
     gyro_z: Mapped[int] = mapped_column(Integer, nullable=True)
