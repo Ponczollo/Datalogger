@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
-from src.database.models import Device, User
+from src.database.models import Device, GPS, GyroAcc, TempHum, User
 
 
 class UserRepository:
@@ -9,14 +9,26 @@ class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_with_device_data(self, user_id: int) -> User | None:
+    def get_with_device_data(
+        self,
+        user_id: int,
+        start: int | None = None,
+        end: int | None = None,
+    ) -> User | None:
+        def readings_loader(relationship, model):
+            if start is not None:
+                relationship = relationship.and_(model.time >= start)
+            if end is not None:
+                relationship = relationship.and_(model.time <= end)
+            return selectinload(User.devices).selectinload(relationship)
+
         statement = (
             select(User)
             .where(User.id == user_id)
             .options(
-                selectinload(User.devices).selectinload(Device.gps_readings),
-                selectinload(User.devices).selectinload(Device.gyroacc_readings),
-                selectinload(User.devices).selectinload(Device.temphum_readings),
+                readings_loader(Device.gps_readings, GPS),
+                readings_loader(Device.gyroacc_readings, GyroAcc),
+                readings_loader(Device.temphum_readings, TempHum),
             )
         )
         return self.db.scalar(statement)

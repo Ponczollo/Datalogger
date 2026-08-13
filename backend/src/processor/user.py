@@ -31,8 +31,13 @@ class UserProcessor:
     def __init__(self, db: Session):
         self.repository = UserRepository(db)
 
-    def get_data(self, user_id: int) -> UserDataResponse:
-        user = self.repository.get_with_device_data(user_id)
+    def get_data(
+        self,
+        user_id: int,
+        start: int | None = None,
+        end: int | None = None,
+    ) -> UserDataResponse:
+        user = self.repository.get_with_device_data(user_id, start, end)
         if user is None:
             raise UserNotFoundError
 
