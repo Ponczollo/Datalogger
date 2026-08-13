@@ -18,7 +18,6 @@ class DeviceRepository:
     def add_device(self, device_id: int) -> Device:
         device = Device(id=device_id, name=f"DEVICE_{device_id}")
         self.db.add(device)
-        self.db.commit()
         return device
 
     def add_log_entries(self, device_id: int, payload: DeviceLogRequest) -> None:
@@ -35,5 +34,3 @@ class DeviceRepository:
 
         if reading.temperature is not None or reading.humidity is not None:
             self.db.add(TempHum(device_id=device_id, time=timestamp, temperature=reading.temperature, humidity=reading.humidity))
-
-        self.db.commit()

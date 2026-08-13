@@ -16,11 +16,12 @@ class DeviceController:
     def register_device(self, device_id: int, db: Session = Depends(get_db)) -> dict[str, int | str]:
         try:
             name = DeviceProcessor(db).register(device_id)
+            db.commit()
         except DeviceAlreadyRegisteredError as error:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Device is already registered") from error
-        except Exception as e:
+        except Exception as error:
             db.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unknown error")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unknown error") from error
 
         return {"id": device_id, "name": name}
 
@@ -30,9 +31,9 @@ class DeviceController:
             db.commit()
         except DeviceNotFoundError as error:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Device is not registered") from error
-        except Exception:
+        except Exception as error:
             db.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unknown error")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unknown error") from error
 
         return {"status": "OK"}
 
