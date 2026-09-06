@@ -40,3 +40,13 @@ def test_fetch_uploaded_device_readings(user_device_pair: tuple[int, int]) -> No
         "temperature": payload[timestamp]["temperature"],
         "humidity": payload[timestamp]["humidity"],
     }]
+
+
+def test_get_user_devices_returns_device_names(user_device_pair: tuple[int, int]) -> None:
+    user_id, device_id = user_device_pair
+
+    with httpx.Client(base_url=API_URL, timeout=5.0) as client:
+        response = client.get(f"/user/devices/{user_id}")
+
+    assert response.status_code == 200, response.text
+    assert response.json() == [{"id": device_id, "name": f"DEVICE_{device_id}"}]

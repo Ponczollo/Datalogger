@@ -30,6 +30,11 @@ class DeviceDataResponse(BaseModel):
     temphum: list[TempHumReadingResponse]
 
 
+class DeviceResponse(BaseModel):
+    id: int
+    name: str
+
+
 class UserDataResponse(BaseModel):
     id: int
     name: str
