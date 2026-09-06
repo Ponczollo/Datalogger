@@ -1,6 +1,6 @@
 from numbers import Real
 
-from smbus import SMBus
+from smbus2 import SMBus
 
 from rpi.gyroacc import MPU9250, Vector3, MotionData
 

@@ -1,6 +1,7 @@
 import time
-from smbus import SMBus
 from dataclasses import dataclass
+
+from smbus2 import SMBus
 
 
 @dataclass(frozen=True)

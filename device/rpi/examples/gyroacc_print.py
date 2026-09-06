@@ -1,6 +1,8 @@
-from smbus import SMBus
-from rpi.gyroacc import MPU9250
 import time
+
+from smbus2 import SMBus
+
+from rpi.gyroacc import MPU9250
 
 bus = SMBus(1)
 try:
