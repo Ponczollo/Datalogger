@@ -36,6 +36,13 @@ class UserRepository:
     def get(self, user_id: int) -> User | None:
         return self.db.get(User, user_id)
 
+    def get_with_devices(self, user_id: int) -> User | None:
+        return self.db.scalar(
+            select(User)
+            .where(User.id == user_id)
+            .options(selectinload(User.devices))
+        )
+
     def add_user(self, user_id: int) -> User:
         user = User(id=user_id, name=f"USER_{user_id}")
         self.db.add(user)
