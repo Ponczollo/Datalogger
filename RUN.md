@@ -27,3 +27,11 @@ python main.py
 ```bash
 streamlit run main.py
 ```
+
+# RPi Device
+```bash
+python -m rpi.[...]
+```
+```bash
+python -m pytest rpi/[...]
+```
