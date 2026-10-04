@@ -37,12 +37,8 @@ class AHT10:
     def _initialize(self):
         time.sleep(0.02)
         if not self._read_bytes(1)[0] & self._CALIBRATED:
-            self._write_bytes(self._INITIALIZE, 0x08, 0x00)
+            self.bus.write_i2c_block_data(self.address, self._INITIALIZE, [0x08, 0x00])
             time.sleep(0.01)
-
-    def _write_bytes(self, *data):
-        message = i2c_msg.write(self.address, data)
-        self.bus.i2c_rdwr(message)
 
     def _read_bytes(self, length):
         message = i2c_msg.read(self.address, length)
@@ -50,7 +46,7 @@ class AHT10:
         return list(message)
 
     def read(self):
-        self._write_bytes(self._TRIGGER_MEASUREMENT, 0x33, 0x00)
+        self.bus.write_i2c_block_data(self.address, self._TRIGGER_MEASUREMENT, [0x33, 0x00])
         time.sleep(self._MEASUREMENT_DELAY)
 
         data = self._read_bytes(6)
