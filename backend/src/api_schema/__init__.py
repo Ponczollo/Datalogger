@@ -1,4 +1,4 @@
 from src.api_schema.device import DeviceLogRequest, SensorReading
-from src.api_schema.user import UserDataResponse
+from src.api_schema.user import DeviceResponse, UserDataResponse
 
-__all__ = ["DeviceLogRequest", "SensorReading", "UserDataResponse"]
+__all__ = ["DeviceLogRequest", "SensorReading", "DeviceResponse", "UserDataResponse"]

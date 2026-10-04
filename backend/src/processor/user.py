@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from src.api_schema.user import (
     DeviceDataResponse,
+    DeviceResponse,
     GPSReadingResponse,
     GyroAccReadingResponse,
     TempHumReadingResponse,
@@ -76,6 +77,16 @@ class UserProcessor:
                 for device in user.devices
             ],
         )
+
+    def get_devices(self, user_id: int) -> list[DeviceResponse]:
+        user = self.repository.get_with_devices(user_id)
+        if user is None:
+            raise UserNotFoundError
+
+        return [
+            DeviceResponse(id=device.id, name=device.name)
+            for device in sorted(user.devices, key=lambda device: device.id)
+        ]
 
     def register(self, user_id: int) -> str:
         if self.repository.get(user_id) is not None:

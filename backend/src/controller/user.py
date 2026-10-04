@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from src.api_schema.user import UserDataResponse
+from src.api_schema.user import DeviceResponse, UserDataResponse
 from src.dependencies import get_db
 from src.processor.user import (
     DeviceNotFoundError,
@@ -27,6 +27,12 @@ class UserController:
             self.add_device,
             methods=["POST"],
             status_code=status.HTTP_201_CREATED,
+        )
+        self.router.add_api_route(
+            "/devices/{user_id}",
+            self.get_devices,
+            methods=["GET"],
+            response_model=list[DeviceResponse],
         )
         self.router.add_api_route(
             "/data/all/{user_id}",
@@ -100,6 +106,12 @@ class UserController:
 
     def get_user_data(self, user_id: int, db: Session = Depends(get_db)) -> UserDataResponse:
         return self._get_user_data(user_id, db)
+
+    def get_devices(self, user_id: int, db: Session = Depends(get_db)) -> list[DeviceResponse]:
+        try:
+            return UserProcessor(db).get_devices(user_id)
+        except UserNotFoundError as error:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User was not found") from error
 
     def get_single_user_data(
         self,
